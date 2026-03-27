@@ -2,10 +2,14 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class VentanaJuego extends JFrame {
 
     private JButton botonReiniciar;
+    private JButton botonGuardar;
     private boolean juegoTerminado = false;
     private JPanel panelTablero;
     private JButton[][] botones;
@@ -41,6 +45,15 @@ public class VentanaJuego extends JFrame {
             }
         });
 
+        botonGuardar = new JButton("Guardar");
+        botonGuardar.setFont(new Font("Arial", Font.BOLD, 14));
+        botonGuardar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                guardarPartida();
+            }
+        });
+
         panelTablero = new JPanel();
         panelTablero.setLayout(new GridLayout(10, 10));
 
@@ -63,9 +76,13 @@ public class VentanaJuego extends JFrame {
             }
         }
 
+        JPanel panelBotones = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        panelBotones.add(botonGuardar);
+        panelBotones.add(botonReiniciar);
+
         JPanel panelSuperior = new JPanel(new BorderLayout());
         panelSuperior.add(etiquetaTurno, BorderLayout.CENTER);
-        panelSuperior.add(botonReiniciar, BorderLayout.EAST);
+        panelSuperior.add(panelBotones, BorderLayout.EAST);
 
         add(panelSuperior, BorderLayout.NORTH);
         add(panelTablero, BorderLayout.CENTER);
@@ -157,6 +174,41 @@ public class VentanaJuego extends JFrame {
         etiquetaTurno.setText("Turno: " + nombreJugador1 + " (" + simboloJugador1 + ")");
     }
 
+    private void guardarPartida() {
+        try {
+            BufferedWriter writer = new BufferedWriter(new FileWriter("partida.txt"));
+
+            writer.write(nombreJugador1);
+            writer.newLine();
+            writer.write(nombreJugador2);
+            writer.newLine();
+            writer.write(simboloJugador1);
+            writer.newLine();
+            writer.write(simboloJugador2);
+            writer.newLine();
+            writer.write(String.valueOf(turnoX));
+            writer.newLine();
+            writer.write(String.valueOf(juegoTerminado));
+            writer.newLine();
+
+            for (int fila = 0; fila < 10; fila++) {
+                for (int columna = 0; columna < 10; columna++) {
+                    writer.write(botones[fila][columna].getText());
+                    if (columna < 9) {
+                        writer.write(",");
+                    }
+                }
+                writer.newLine();
+            }
+
+            writer.close();
+
+            JOptionPane.showMessageDialog(this, "Partida guardada correctamente.");
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "Error al guardar la partida.");
+        }
+    }
+
     private boolean verificarGanador(String simbolo) {
         // Horizontal
         for (int fila = 0; fila < 10; fila++) {
@@ -203,5 +255,9 @@ public class VentanaJuego extends JFrame {
         }
 
         return false;
+    }
+
+    public static void main(String[] args) {
+        new VentanaJuego();
     }
 }
