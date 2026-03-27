@@ -20,6 +20,7 @@ public class VentanaJuego extends JFrame {
     private JButton[][] botones;
     private boolean turnoX = true;
     private JLabel etiquetaTurno;
+    private JLabel etiquetaInfo;
 
     private String nombreJugador1;
     private String nombreJugador2;
@@ -40,6 +41,9 @@ public class VentanaJuego extends JFrame {
                 SwingConstants.CENTER
         );
         etiquetaTurno.setFont(new Font("Arial", Font.BOLD, 20));
+
+        etiquetaInfo = new JLabel("Luis Miguel Barillas Del Cid - carnet: 7690-25-2654", SwingConstants.CENTER);
+        etiquetaInfo.setFont(new Font("Arial", Font.PLAIN, 14));
 
         botonReiniciar = new JButton("Reiniciar");
         botonReiniciar.setFont(new Font("Arial", Font.BOLD, 14));
@@ -111,6 +115,7 @@ public class VentanaJuego extends JFrame {
 
         add(panelSuperior, BorderLayout.NORTH);
         add(panelTablero, BorderLayout.CENTER);
+        add(etiquetaInfo, BorderLayout.SOUTH);
 
         setVisible(true);
     }
@@ -323,3 +328,4 @@ public class VentanaJuego extends JFrame {
         new VentanaJuego();
     }
 }
+
