@@ -4,7 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class ventanaJuego extends JFrame {
-
+    private boolean juegoTerminado = false;
     private JPanel panelTablero;
     private JButton[][] botones;
     private boolean turnoX = true;
@@ -33,15 +33,29 @@ public class ventanaJuego extends JFrame {
                 boton.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        if (boton.getText().equals("")) {
+                        if (!juegoTerminado && boton.getText().equals("")) {
+                            String simboloActual;
+
                             if (turnoX) {
+                                simboloActual = "X";
                                 boton.setText("X");
-                                etiquetaTurno.setText("Turno: O");
                             } else {
+                                simboloActual = "O";
                                 boton.setText("O");
-                                etiquetaTurno.setText("Turno: X");
                             }
-                            turnoX = !turnoX;
+
+                            if (verificarGanador(simboloActual)) {
+                                etiquetaTurno.setText("Ganó el jugador: " + simboloActual);
+                                JOptionPane.showMessageDialog(null, "Ganó el jugador: " + simboloActual);
+                                juegoTerminado = true;
+                            } else {
+                                turnoX = !turnoX;
+                                if (turnoX) {
+                                    etiquetaTurno.setText("Turno: X");
+                                } else {
+                                    etiquetaTurno.setText("Turno: O");
+                                }
+                            }
                         }
                     }
                 });
@@ -56,4 +70,54 @@ public class ventanaJuego extends JFrame {
 
         setVisible(true);
     }
+
+    private boolean verificarGanador(String simbolo) {
+        // Horizontal
+        for (int fila = 0; fila < 10; fila++) {
+            for (int columna = 0; columna < 8; columna++) {
+                if (botones[fila][columna].getText().equals(simbolo) &&
+                        botones[fila][columna + 1].getText().equals(simbolo) &&
+                        botones[fila][columna + 2].getText().equals(simbolo)) {
+                    return true;
+                }
+            }
+        }
+
+        // Vertical
+        for (int fila = 0; fila < 8; fila++) {
+            for (int columna = 0; columna < 10; columna++) {
+                if (botones[fila][columna].getText().equals(simbolo) &&
+                        botones[fila + 1][columna].getText().equals(simbolo) &&
+                        botones[fila + 2][columna].getText().equals(simbolo)) {
+                    return true;
+                }
+            }
+        }
+
+        // Diagonal principal
+        for (int fila = 0; fila < 8; fila++) {
+            for (int columna = 0; columna < 8; columna++) {
+                if (botones[fila][columna].getText().equals(simbolo) &&
+                        botones[fila + 1][columna + 1].getText().equals(simbolo) &&
+                        botones[fila + 2][columna + 2].getText().equals(simbolo)) {
+                    return true;
+                }
+            }
+        }
+
+        // Diagonal inversa
+        for (int fila = 0; fila < 8; fila++) {
+            for (int columna = 2; columna < 10; columna++) {
+                if (botones[fila][columna].getText().equals(simbolo) &&
+                        botones[fila + 1][columna - 1].getText().equals(simbolo) &&
+                        botones[fila + 2][columna - 2].getText().equals(simbolo)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
 }
+
+
