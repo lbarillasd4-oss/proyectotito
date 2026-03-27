@@ -5,11 +5,14 @@ import java.awt.event.ActionListener;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.BufferedReader;
+import java.io.FileReader;
 
 public class VentanaJuego extends JFrame {
 
     private JButton botonReiniciar;
     private JButton botonGuardar;
+    private JButton botonCargar;
     private boolean juegoTerminado = false;
     private JPanel panelTablero;
     private JButton[][] botones;
@@ -54,6 +57,15 @@ public class VentanaJuego extends JFrame {
             }
         });
 
+        botonCargar = new JButton("Cargar");
+        botonCargar.setFont(new Font("Arial", Font.BOLD, 14));
+        botonCargar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                cargarPartida();
+            }
+        });
+
         panelTablero = new JPanel();
         panelTablero.setLayout(new GridLayout(10, 10));
 
@@ -76,8 +88,9 @@ public class VentanaJuego extends JFrame {
             }
         }
 
-        JPanel panelBotones = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        JPanel panelBotones = new JPanel();
         panelBotones.add(botonGuardar);
+        panelBotones.add(botonCargar);
         panelBotones.add(botonReiniciar);
 
         JPanel panelSuperior = new JPanel(new BorderLayout());
@@ -114,10 +127,7 @@ public class VentanaJuego extends JFrame {
         }
 
         if (simboloJugador1.equals(simboloJugador2)) {
-            JOptionPane.showMessageDialog(
-                    this,
-                    "Los símbolos no pueden ser iguales. Se usarán X y O por defecto."
-            );
+            JOptionPane.showMessageDialog(this, "Los símbolos no pueden ser iguales. Se usarán X y O por defecto.");
             simboloJugador1 = "X";
             simboloJugador2 = "O";
         }
@@ -145,10 +155,7 @@ public class VentanaJuego extends JFrame {
                 }
 
                 etiquetaTurno.setText("Ganó: " + nombreGanador + " (" + simboloActual + ")");
-                JOptionPane.showMessageDialog(
-                        this,
-                        "Ganó el jugador: " + nombreGanador + " con el símbolo " + simboloActual
-                );
+                JOptionPane.showMessageDialog(this, "Ganó el jugador: " + nombreGanador + " con el símbolo " + simboloActual);
                 juegoTerminado = true;
             } else {
                 turnoX = !turnoX;
@@ -206,6 +213,44 @@ public class VentanaJuego extends JFrame {
             JOptionPane.showMessageDialog(this, "Partida guardada correctamente.");
         } catch (IOException e) {
             JOptionPane.showMessageDialog(this, "Error al guardar la partida.");
+        }
+    }
+
+    private void cargarPartida() {
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader("partida.txt"));
+
+            nombreJugador1 = reader.readLine();
+            nombreJugador2 = reader.readLine();
+            simboloJugador1 = reader.readLine();
+            simboloJugador2 = reader.readLine();
+            turnoX = Boolean.parseBoolean(reader.readLine());
+            juegoTerminado = Boolean.parseBoolean(reader.readLine());
+
+            for (int fila = 0; fila < 10; fila++) {
+                String linea = reader.readLine();
+                String[] valores = linea.split(",", -1);
+
+                for (int columna = 0; columna < 10; columna++) {
+                    botones[fila][columna].setText(valores[columna]);
+                }
+            }
+
+            reader.close();
+
+            if (juegoTerminado) {
+                etiquetaTurno.setText("Partida cargada (terminada)");
+            } else {
+                if (turnoX) {
+                    etiquetaTurno.setText("Turno: " + nombreJugador1 + " (" + simboloJugador1 + ")");
+                } else {
+                    etiquetaTurno.setText("Turno: " + nombreJugador2 + " (" + simboloJugador2 + ")");
+                }
+            }
+
+            JOptionPane.showMessageDialog(this, "Partida cargada correctamente.");
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "Error al cargar la partida.");
         }
     }
 
