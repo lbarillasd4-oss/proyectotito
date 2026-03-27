@@ -3,14 +3,15 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class ventanaJuego extends JFrame {
+public class VentanaJuego extends JFrame {
+    private JButton botonReiniciar;
     private boolean juegoTerminado = false;
     private JPanel panelTablero;
     private JButton[][] botones;
     private boolean turnoX = true;
     private JLabel etiquetaTurno;
 
-    public ventanaJuego() {
+    public VentanaJuego() {
         setTitle("Totito 10x10");
         setSize(800, 850);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -19,6 +20,15 @@ public class ventanaJuego extends JFrame {
 
         etiquetaTurno = new JLabel("Turno: X", SwingConstants.CENTER);
         etiquetaTurno.setFont(new Font("Arial", Font.BOLD, 20));
+
+        botonReiniciar = new JButton("Nuevo Juego");
+        botonReiniciar.setFont(new Font("Arial", Font.BOLD, 14));
+        botonReiniciar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                reiniciarJuego();
+            }
+        });
 
         panelTablero = new JPanel();
         panelTablero.setLayout(new GridLayout(10, 10));
@@ -50,11 +60,7 @@ public class ventanaJuego extends JFrame {
                                 juegoTerminado = true;
                             } else {
                                 turnoX = !turnoX;
-                                if (turnoX) {
-                                    etiquetaTurno.setText("Turno: X");
-                                } else {
-                                    etiquetaTurno.setText("Turno: O");
-                                }
+                                etiquetaTurno.setText(turnoX ? "Turno: X" : "Turno: O");
                             }
                         }
                     }
@@ -65,14 +71,31 @@ public class ventanaJuego extends JFrame {
             }
         }
 
-        add(etiquetaTurno, BorderLayout.NORTH);
+        JPanel panelSuperior = new JPanel(new BorderLayout());
+        panelSuperior.add(etiquetaTurno, BorderLayout.CENTER);
+        panelSuperior.add(botonReiniciar, BorderLayout.EAST);
+
+        add(panelSuperior, BorderLayout.NORTH);
         add(panelTablero, BorderLayout.CENTER);
 
         setVisible(true);
     }
 
+    private void reiniciarJuego() {
+        System.out.println("Se presionó Nuevo Juego");
+
+        for (int fila = 0; fila < 10; fila++) {
+            for (int columna = 0; columna < 10; columna++) {
+                botones[fila][columna].setText("");
+            }
+        }
+
+        turnoX = true;
+        juegoTerminado = false;
+        etiquetaTurno.setText("Turno: X");
+    }
+
     private boolean verificarGanador(String simbolo) {
-        // Horizontal
         for (int fila = 0; fila < 10; fila++) {
             for (int columna = 0; columna < 8; columna++) {
                 if (botones[fila][columna].getText().equals(simbolo) &&
@@ -83,7 +106,6 @@ public class ventanaJuego extends JFrame {
             }
         }
 
-        // Vertical
         for (int fila = 0; fila < 8; fila++) {
             for (int columna = 0; columna < 10; columna++) {
                 if (botones[fila][columna].getText().equals(simbolo) &&
@@ -94,7 +116,6 @@ public class ventanaJuego extends JFrame {
             }
         }
 
-        // Diagonal principal
         for (int fila = 0; fila < 8; fila++) {
             for (int columna = 0; columna < 8; columna++) {
                 if (botones[fila][columna].getText().equals(simbolo) &&
@@ -105,7 +126,6 @@ public class ventanaJuego extends JFrame {
             }
         }
 
-        // Diagonal inversa
         for (int fila = 0; fila < 8; fila++) {
             for (int columna = 2; columna < 10; columna++) {
                 if (botones[fila][columna].getText().equals(simbolo) &&
@@ -119,5 +139,3 @@ public class ventanaJuego extends JFrame {
         return false;
     }
 }
-
-
