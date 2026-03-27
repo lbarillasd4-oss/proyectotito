@@ -34,19 +34,26 @@ public class VentanaJuego extends JFrame {
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
 
+        getContentPane().setBackground(new Color(30, 30, 30));
+
         pedirDatosJugadores();
 
         etiquetaTurno = new JLabel(
                 "Turno: " + nombreJugador1 + " (" + simboloJugador1 + ")",
                 SwingConstants.CENTER
         );
-        etiquetaTurno.setFont(new Font("Arial", Font.BOLD, 20));
+        etiquetaTurno.setFont(new Font("Arial", Font.BOLD, 22));
+        etiquetaTurno.setForeground(Color.WHITE);
 
         etiquetaInfo = new JLabel("Luis Miguel Barillas Del Cid - carnet: 7690-25-2654", SwingConstants.CENTER);
         etiquetaInfo.setFont(new Font("Arial", Font.PLAIN, 14));
+        etiquetaInfo.setForeground(Color.WHITE);
 
         botonReiniciar = new JButton("Reiniciar");
         botonReiniciar.setFont(new Font("Arial", Font.BOLD, 14));
+        botonReiniciar.setBackground(Color.GRAY);
+        botonReiniciar.setForeground(Color.WHITE);
+        botonReiniciar.setFocusPainted(false);
         botonReiniciar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -56,6 +63,9 @@ public class VentanaJuego extends JFrame {
 
         botonGuardar = new JButton("Guardar");
         botonGuardar.setFont(new Font("Arial", Font.BOLD, 14));
+        botonGuardar.setBackground(Color.GRAY);
+        botonGuardar.setForeground(Color.WHITE);
+        botonGuardar.setFocusPainted(false);
         botonGuardar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -65,6 +75,9 @@ public class VentanaJuego extends JFrame {
 
         botonCargar = new JButton("Cargar");
         botonCargar.setFont(new Font("Arial", Font.BOLD, 14));
+        botonCargar.setBackground(Color.GRAY);
+        botonCargar.setForeground(Color.WHITE);
+        botonCargar.setFocusPainted(false);
         botonCargar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -74,6 +87,9 @@ public class VentanaJuego extends JFrame {
 
         botonNuevoJuego = new JButton("Nuevo Juego");
         botonNuevoJuego.setFont(new Font("Arial", Font.BOLD, 14));
+        botonNuevoJuego.setBackground(Color.GRAY);
+        botonNuevoJuego.setForeground(Color.WHITE);
+        botonNuevoJuego.setFocusPainted(false);
         botonNuevoJuego.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -83,6 +99,7 @@ public class VentanaJuego extends JFrame {
 
         panelTablero = new JPanel();
         panelTablero.setLayout(new GridLayout(10, 10));
+        panelTablero.setBackground(Color.BLACK);
 
         botones = new JButton[10][10];
 
@@ -90,6 +107,9 @@ public class VentanaJuego extends JFrame {
             for (int columna = 0; columna < 10; columna++) {
                 JButton boton = new JButton("");
                 boton.setFont(new Font("Arial", Font.BOLD, 18));
+                boton.setBackground(Color.DARK_GRAY);
+                boton.setForeground(Color.WHITE);
+                boton.setFocusPainted(false);
 
                 boton.addActionListener(new ActionListener() {
                     @Override
@@ -104,12 +124,14 @@ public class VentanaJuego extends JFrame {
         }
 
         JPanel panelBotones = new JPanel();
+        panelBotones.setBackground(new Color(30, 30, 30));
         panelBotones.add(botonGuardar);
         panelBotones.add(botonCargar);
         panelBotones.add(botonReiniciar);
         panelBotones.add(botonNuevoJuego);
 
         JPanel panelSuperior = new JPanel(new BorderLayout());
+        panelSuperior.setBackground(new Color(30, 30, 30));
         panelSuperior.add(etiquetaTurno, BorderLayout.CENTER);
         panelSuperior.add(panelBotones, BorderLayout.EAST);
 
@@ -157,9 +179,11 @@ public class VentanaJuego extends JFrame {
             if (turnoX) {
                 simboloActual = simboloJugador1;
                 boton.setText(simboloJugador1);
+                boton.setForeground(Color.CYAN);
             } else {
                 simboloActual = simboloJugador2;
                 boton.setText(simboloJugador2);
+                boton.setForeground(Color.ORANGE);
             }
 
             if (verificarGanador(simboloActual)) {
@@ -190,6 +214,7 @@ public class VentanaJuego extends JFrame {
         for (int fila = 0; fila < 10; fila++) {
             for (int columna = 0; columna < 10; columna++) {
                 botones[fila][columna].setText("");
+                botones[fila][columna].setForeground(Color.WHITE);
             }
         }
 
@@ -255,6 +280,14 @@ public class VentanaJuego extends JFrame {
 
                 for (int columna = 0; columna < 10; columna++) {
                     botones[fila][columna].setText(valores[columna]);
+
+                    if (valores[columna].equals(simboloJugador1)) {
+                        botones[fila][columna].setForeground(Color.CYAN);
+                    } else if (valores[columna].equals(simboloJugador2)) {
+                        botones[fila][columna].setForeground(Color.ORANGE);
+                    } else {
+                        botones[fila][columna].setForeground(Color.WHITE);
+                    }
                 }
             }
 
@@ -328,4 +361,3 @@ public class VentanaJuego extends JFrame {
         new VentanaJuego();
     }
 }
-
