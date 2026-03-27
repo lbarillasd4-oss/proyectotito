@@ -13,6 +13,8 @@ public class VentanaJuego extends JFrame {
     private JButton botonReiniciar;
     private JButton botonGuardar;
     private JButton botonCargar;
+    private JButton botonNuevoJuego;
+
     private boolean juegoTerminado = false;
     private JPanel panelTablero;
     private JButton[][] botones;
@@ -39,7 +41,7 @@ public class VentanaJuego extends JFrame {
         );
         etiquetaTurno.setFont(new Font("Arial", Font.BOLD, 20));
 
-        botonReiniciar = new JButton("Nuevo Juego");
+        botonReiniciar = new JButton("Reiniciar");
         botonReiniciar.setFont(new Font("Arial", Font.BOLD, 14));
         botonReiniciar.addActionListener(new ActionListener() {
             @Override
@@ -63,6 +65,15 @@ public class VentanaJuego extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 cargarPartida();
+            }
+        });
+
+        botonNuevoJuego = new JButton("Nuevo Juego");
+        botonNuevoJuego.setFont(new Font("Arial", Font.BOLD, 14));
+        botonNuevoJuego.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                nuevoJuego();
             }
         });
 
@@ -92,6 +103,7 @@ public class VentanaJuego extends JFrame {
         panelBotones.add(botonGuardar);
         panelBotones.add(botonCargar);
         panelBotones.add(botonReiniciar);
+        panelBotones.add(botonNuevoJuego);
 
         JPanel panelSuperior = new JPanel(new BorderLayout());
         panelSuperior.add(etiquetaTurno, BorderLayout.CENTER);
@@ -181,6 +193,12 @@ public class VentanaJuego extends JFrame {
         etiquetaTurno.setText("Turno: " + nombreJugador1 + " (" + simboloJugador1 + ")");
     }
 
+    private void nuevoJuego() {
+        reiniciarJuego();
+        pedirDatosJugadores();
+        etiquetaTurno.setText("Turno: " + nombreJugador1 + " (" + simboloJugador1 + ")");
+    }
+
     private void guardarPartida() {
         try {
             BufferedWriter writer = new BufferedWriter(new FileWriter("partida.txt"));
@@ -209,7 +227,6 @@ public class VentanaJuego extends JFrame {
             }
 
             writer.close();
-
             JOptionPane.showMessageDialog(this, "Partida guardada correctamente.");
         } catch (IOException e) {
             JOptionPane.showMessageDialog(this, "Error al guardar la partida.");
